@@ -1,64 +1,113 @@
 ---
-layout: page
-title: API Showcase
+layout: default
+title: API Evangelist - Showcase
 ---
-<p style="font-size: 12px; padding:5px;">
-  <img src="{{ site.project_image }}" align="right" width="75" style="padding:10px;" />
-  {{ site.project_summary }}
-</p>
 
-<center><hr style="padding: 5px 5px 5px 5px; margin: 5px; width: 85%;" /></center>
-<div class="row" style="vertical-align: top;" align="center">
+<!-- Main -->
+{% assign home_content = site.data.home_content.index[0] %}
+<section id="banner">
+	<div class="content">
+		<header>
+			<h2>{{ home_content.title }}</h2>
+		</header>
+		{{ home_content.content }}
+	</div>
+	<span class="image object">
+		<img src="{{ home_content.image }}" alt="" width="25%" />
+	</span>
+</section>
 
-  <div class="span4" align="left" style="float: none; margin: 0 auto; display: inline-block; height: 100%; vertical-align: top;">
-    <p><strong><span style="font-size: 20px;">&#8620;</span>&nbsp;&nbsp;Latest News</strong><a href="/blog.xml"><img src="https://s3.amazonaws.com/kinlane-productions/bw-icons/bw-rss-icon.png" width="15" style="padding-left: 5px;" /></a></p>
-    <ul class="newslist">
-      {% for curated in site.data.curated  limit:5 %}
-        <li><a href="{{ curated.url }}">{{ curated.title }}</a></li>
-      {% endfor %}
-    </ul>
+<!-- Partners -->
+<a name="Partners"></a>
+<section>
+	<header>
+		<h2>API Evangelist Partners</h2>
+		<p>These are my partners who invest in API Evangelist each month, helping underwrite my research, and making sure I'm able to keep monitoring the API space as I do.</p>
+	</header>
+	<div class="features">
+		{% assign partners = site.data.partners.index | sort: 'view_sort' %}
+    {% for partner in partners %}
+      {% if partner.type == 'Sponsor' %}
+			<article>
+				<p><a href="{{ partner.url }}" target="_blank"><img src="{{ partner.image }}" width="75%" style="padding: 15px;" align="center" /></a></p>
+				<div class="content">
+					<h3><a href="{{ partner.url }}" target="_blank">{{ partner.name }}</a></h3>
+					<p>{{ partner.description }}</p>
+				</div>
+			</article>
+      {% endif %}
+    {% endfor %}
+	</div>
+</section>
 
-  </div>
-  <div class="span4" align="left" style="float: none; margin: 0 auto; display: inline-block; height: 100%; vertical-align: top;">
+<!-- Blog Feature -->
+<a name="BlogFeature"></a>
+{% for post in site.posts limit:1 %}
+	<section id="banner">
+		<div class="content">
+			<header>
+				<h2>Latest From Blog on API Design: {{ post.title }}</h2>
+				<p><em>{{ post.date | date_to_string }}</em></p>
+			</header>
+			{{ post.content }}
+			<ul class="actions" style="text-align: center;">
+				<li><a href="/blog/" class="button big">Read The Blog</a></li>
+			</ul>
+		</div>
+	</section>
+{% endfor %}
 
-    <script type="text/javascript">
-      $url = 'http://apievangelist.com/blog.xml';
-      var $listcount = 0;
-      $.get($url, function (data) {
-          $(data).find("item").each(function () {
-              var el = $(this);
-              $title = el.find("title").text();
-              $link = el.find("link").text();
-              if($listcount<5){
-                $listitem = '<li><a href="' + $link + '">' + $title + '</a></li>';
-                $('#rssNews').append($listitem);
-                }
-              $listcount++;
-          });
-      });
-    </script>
-    <p><strong><span style="font-size: 20px;">&#8620;</span>&nbsp;&nbsp;Latest Analysis</strong><a href="http://apievangelist.com/blog.xml"><img src="https://s3.amazonaws.com/kinlane-productions/bw-icons/bw-rss-icon.png" width="15" style="padding-left: 5px;" /></a></p>
-    <ul class="newslist" id="rssNews"></ul>
+<!-- News -->
+<a name="News"></a>
+{% assign news_content = site.data.news_content.index[0] %}
+{% assign news = site.data.curated.index %}
+{% assign news = news | sort: 'item_date' | reverse %}
+<section>
+	<header>
+		<h2>{{ news_content.title }}</h2>
+	</header>
+	<p>{{ news_content.header }}</p>
+	<div class="table-wrapper" style="height: 500px; overflow: auto;">
+		<table class="alt">
+			<thead>
+				<tr>
+					<th>Title</th>
+					<th>Source</th>
+					<th>Visit</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for curated in news %}
+					{% unless curated.title == '' %}
+					<tr>
+						<td><a href="{{ curated.url }}" title="{{ curated.title }}" style="color:#000; font-size: 12px;">{{ curated.title }}</a> <span style="color:#000; font-size: 12px;">(<i>{{ curated.item_date | date: "%Y-%m-%d" }}</i>)</span></td>
+						<td>{% if curated.domain != null %}<a href="http://{{ curated.domain }}" style="color:#000; font-size: 12px;">{{ curated.domain }}</i></a>{% endif %}</td>
+						<td><a href="{{ curated.url }}" target="_blank"><img src="https://s3.amazonaws.com/kinlane-productions/bw-icons/bw-forward.png" width="25" /></a></td>
+					</tr>
+					{% endunless %}
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<p>{{ news_content.footer }}</p>
+	<center>
+		<ul class="actions" style="text-align: center;">
+			<li><a href="/news/" class="button big">Read The News</a></li>
+		</ul>
+	</center>
+</section>
 
-  </div>
-</div>
-<center><hr style="padding: 5px; margin: 5px; width: 100%;" /></center>
-<div class="row" align="center" style="padding-bottom: 20px;">
-
-  <div class="span5" style="float: none; margin: 0 auto; display: inline-block;" align="left">
-
-    <ul class="newslist" style="list-style: none; font-size: 14px; padding: 0px; margin: 0px;">
-      <li><a href="http://evangelism.apievangelist.com"><strong><span style="font-size: 20px;">&#8666;</span>&nbsp;&nbsp;View My Research on API Evangelism</strong></a></li>
-    </ul>
-
-  </div>
-
-  <div class="span5" style="float: none; margin: 0 auto; display: inline-block;" align="right">
-
-    <ul class="newslist" style="list-style: none; font-size: 14px; padding: 0px; margin: 0px;">
-      <li><a href="http://deprecation.apievangelist.com"><strong>Visit My Research On API Deprecation&nbsp;&nbsp;<span style="font-size: 20px;">&#8667;</span></strong></a></li>
-    </ul>
-
-  </div>
-
-</div>
+<!-- About This Research -->
+{% assign about_content = site.data.home_content.index[1] %}
+<a name="About"></a>
+<section id="banner">
+	<div class="content">
+		<header>
+			<h2>{{ about_content.title }}</h2>
+		</header>
+		{{ about_content.content }}
+	</div>
+	<span class="image object">
+		<img src="{{ about_content.image }}" alt="" width="25%" />
+	</span>
+</section>
